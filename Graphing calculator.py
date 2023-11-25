@@ -2,6 +2,124 @@ import re
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+def checking():
+    log = input("Enter a logarithmic equation: ")
+    placement = log.find('log')
+    count = 0
+    if log[0] != 'l':
+        try: # what the log is being multiplied by
+            int(log[:placement])
+        except ValueError:
+            print("Make sure no other variables than x are being used")
+            checking()
+    one = int(log.find('(')) + 1
+    two = int(log.find(')'))
+    parenthesis = log[one:two]
+    placement = int(parenthesis.find('x'))
+    if '+' in parenthesis:
+        placement2 = parenthesis.find('+')
+        if log[one] == 'x':
+            try:
+                int(parenthesis[placement2:])
+            except ValueError:
+                print("make sure x is the only variable being used.")
+                checking()
+        elif log[one] != 'x':
+            try: # within the parenthesis 
+                int(parenthesis[:placement])
+                int(parenthesis[placement2:])
+            except ValueError:
+                print("Make sure x is the only variable being used.")
+                checking()
+    elif '-' in parenthesis:
+        placement2 = parenthesis.find('-')
+        if log[one] == 'x':
+            try:
+                int(parenthesis[placement2:])
+            except ValueError:
+                print("make sure x is the only variable being used.")
+                checking()
+        elif log[one] != 'x':
+            try: # within the parenthesis 
+                int(parenthesis[:placement])
+                int(parenthesis[placement2:])
+            except ValueError:
+                print("Make sure x is the only variable being used.")
+                checking()
+    elif '-' not in parenthesis and '+' not in parenthesis:
+        if log[one] == 'x':
+            pass
+        elif log[one] != 'x':
+            int(parenthesis[:placement])
+        
+    two = two + 1
+    placement = int(log.find('+', two)) + 1
+    if '+' not in log and '-' not in log:
+        pass
+    elif '+' in log or '-' in log:
+        print(placement, 'smth')
+        print("vert")
+        try: # vertical shift
+            print( log[placement:])
+            int(log[placement:])
+        except ValueError:
+            print("Make sure x is the only variable being used.")
+            checking()
+    if '+' not in parenthesis and '-' not in parenthesis and log[one] == 'x':
+        return parenthesis, None, None, log
+    elif '+' not in parenthesis and '-' not in parenthesis and log[one] != 'x':
+        return( parenthesis, placement, None, log)
+    elif '-' in parenthesis or '+' in parenthesis and log[one] == 'x':
+        return( parenthesis, placement2, None, log)
+    elif '-' in parenthesis or '+' in parenthesis and log[one] != 'x':
+        return (parenthesis, placement, placement2, log)
+    
+                        
+def settings(in1):
+    decision = in1
+    if  decision.lower() == 'yes':
+        #input validation. 
+        while True: 
+            try:
+                xmini = float(input("X-min: ")) # minimum value for x-axis
+                break
+            except ValueError:
+                print("Only input numbers.")
+                pass
+        while True: 
+            try:
+                xmaxi = float(input("X-max: ")) # max value for x-axis
+                xmaxi += 0.001 # the np.arrange function stops one step before what the end is set as, so this is just to have it end at the correct number.
+                break
+            except ValueError:
+                print("Only input numbers.")
+                pass
+        while True: 
+            try:
+                ymini = float(input("Y-min: ")) # min value for y-axis
+                break
+            except ValueError:
+                print("Only input numbers.")
+                pass
+        while True: 
+            try:
+                ymaxi = float(input("Y-max: ")) # max value for y-axis
+                break
+            except ValueError:
+                print("Only input numbers.")
+                pass
+        return(xmini, xmaxi, ymini, ymaxi)
+    elif decision.lower() == 'no':
+        print("Default settings will remain.")
+        # default values below
+        xmini = -10
+        xmaxi = 10.001
+        ymini = -10
+        ymaxi = 10
+        return(xmini, xmaxi, ymini, ymaxi)
+
+
+
 
 def calculator():
     while True:
@@ -89,9 +207,10 @@ def graphing():
             print("Currently supported equation types below: ")
             print("Linear")
             print("Quadratic")
+            print("Log (shorthand for logarithmic)")
             equationtype = input("Enter type of equation: ")
             #input validation below.
-            if equationtype.lower() == 'linear' or equationtype.lower() == 'quadratic': 
+            if equationtype.lower() == 'linear' or equationtype.lower() == 'quadratic' or equationtype.lower() == 'log': 
                 break
             else:
                 print("Please choose an option from the list of supported equation types.")
@@ -108,44 +227,7 @@ def graphing():
                 else:
                     print("Please respond with yes or no.")
                     pass
-            if choice.lower() == 'yes':
-                # Input Validation
-                while True: 
-                    try:
-                        xmini = float(input("X-min: "))
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                while True: 
-                    try:
-                        xmaxi = float(input("X-max: "))
-                        xmaxi += 0.001
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                while True: 
-                    try:
-                        ymini = float(input("Y-min: "))
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                while True: 
-                    try:
-                        ymaxi = float(input("Y-max: "))
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                    
-            elif choice.lower() == 'no':
-                print("Default settings will remain.")
-                xmini = -10.0
-                xmaxi = 10.001
-                ymini = -10.0
-                ymaxi = 10.0
+            xmini,xmaxi,ymini,ymaxi = settings(choice)
                 
             while True: #input validation
                 try:
@@ -199,44 +281,7 @@ def graphing():
                 else:
                     print("Please respond with yes or no.")
                     pass
-            if choice.lower() == 'yes':
-                #input validation. 
-                while True: 
-                    try:
-                        xmini = float(input("X-min: ")) # minimum value for x-axis
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                while True: 
-                    try:
-                        xmaxi = float(input("X-max: ")) # max value for x-axis
-                        xmaxi += 0.001 # the np.arrange function stops one step before what the end is set as, so this is just to have it end at the correct number.
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                while True: 
-                    try:
-                        ymini = float(input("Y-min: ")) # min value for y-axis
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-                while True: 
-                    try:
-                        ymaxi = float(input("Y-max: ")) # max value for y-axis
-                        break
-                    except ValueError:
-                        print("Only input numbers.")
-                        pass
-            elif choice.lower() == 'no':
-                print("Default settings will remain.")
-                # default values below
-                xmini = -10
-                xmaxi = 10.001
-                ymini = -10
-                ymaxi = 10
+            xmini,xmaxi,ymini,ymaxi = settings(choice)
 
             print("Standard quadratic equation format is: Ax^2 + Bx + C")
             while True: # input validation
@@ -292,9 +337,7 @@ def graphing():
                     xintercept1 = xintercept1 / (2 * a)
                     xintercept2 = -(b) - math.sqrt( (b**2) - (4 * (a * c)))
                     xintercept2 = xintercept2 / (2 * a)
-                                                  
                 
-            
             if xintercept1 == xintercept2:  # if therse only one x-intercept, the code below runs
                 print("The X-intercept is", '(',xintercept1,',',0.0,')')
             elif xintercept1 != xintercept2: # if there's two x-intercepts, the code below runs.
@@ -311,7 +354,76 @@ def graphing():
             plt.hlines(y = 0, xmin = xmini, xmax = xmaxi) # plots the y-axis line on the graph
             plt.axis([xmini,xmaxi,ymini,ymaxi]) # sets the limits to the graph window.
             plt.show() 
-
+        elif equationtype.lower() == "log":
+            while True: 
+                print("The default settings for range of y-axis and x-axis are listed below.")
+                print("X-axis range: -10 to 10")
+                print("Y-axis range: -10 to 10")
+                choice = input("Would you like to change the ranges for the x-axis and y-axis? ")
+                if choice.lower() == 'yes' or choice.lower() == 'no':
+                    break
+                else:
+                    print("Please respond with yes or no.")
+                    pass
+            xmini,xmaxi,ymini,ymaxi = settings(choice)
+            while True:
+                base = input("Enter base: ")
+                try:
+                    base = int(base)
+                    break
+                except ValueError:
+                    print("Only enter numbers.")
+                    pass
+            parenthesis,placement,placement2,log = checking()
+        one = log.find('(') + 1
+        two = log.find(')')
+        placement = int(parenthesis.find('x'))
+        placement2 = parenthesis.find('+')
+        if log[one] == 'x' and ('+' in parenthesis or '-' in parenthesis):
+            if '-' in parenthesis:
+                xintercept = 1 + float(parenthesis[placement2:])
+            elif '+' in parenthesis:
+                xintercept = 1 - float(parenthesis[placement2:])
+        elif log[one] == 'x' and ('+' not in parenthesis and '-' not in parenthesis):
+            xintercept = 1
+        elif log[one] != 'x' and ('+'in parenthesis or '-' in parenthesis):
+            if '+' in parenthesis:
+                xintercept = ( 1 - float(parenthesis[placement2:])) / float(parenthesis[:placement])
+            if '-' in parenthesis:
+                xintercept = ( 1 + float(parenthesis[placement2:])) / float(parenthesis[:placement])
+        elif log [one] != 'x' and ('+' not in parenthesis and '-' not in parenthesis):
+            xintercept  = 1 / float(parenthesis[:placement])
+                 
+        xaxis = []
+        yaxis = []
+        for i in np.arange(xmini,xmaxi,.001):
+            xaxis += [float(i)]
+        partial = ''
+        partial += ', '
+        partial += str(base)
+        partial += ')'
+        log = log.replace(')', partial)
+        if log[0] != 'l':
+            log = log.replace('log', ' * math.log')
+        elif log[0] == 'l':
+            log = log.replace('log', 'math.log')
+        if parenthesis[0] == 'x':
+            log = log.replace('x', 'i ')
+        elif parenthesis[0] != 'x':
+            log = log.replace('x', ' * i ')
+        for i in xaxis:
+            try:
+                yaxis += [eval(log)]
+            except ValueError:
+                yaxis += [None]
+        print("The X-Intercept is ", '(', xintercept, ',', '0)')
+        img = plt.plot(xaxis, yaxis) 
+        plt.vlines( x = 0, ymin = ymini, ymax = ymaxi) 
+        plt.hlines(y = 0, xmin = xmini , xmax = xmaxi) 
+        plt.axis([xmini,xmaxi,ymini,ymaxi]) 
+        plt.text(xintercept, 0, (xintercept,0), fontsize = 'xx-large', fontweight='extra bold')
+        plt.show()
+        
         while True: #input validation
             restart = input("Would you like to graph another equation? ")
             if restart.lower() == 'yes' or restart.lower() == 'no':
@@ -333,7 +445,9 @@ def graphing():
             if otheroptions.lower() == 'no': # if the user doesn't want to use any function, it closese the program.
                 print("Thank you for using J.G's Graphing Calculator.")
                 break
-
+        
+            
+            
 
 def graphingcalc():
     #introduction menu to the graphing calculator.
@@ -363,7 +477,6 @@ if __name__ == '__main__': # runs the main function when the user runs the scrip
         
             
         
-
 
 
 

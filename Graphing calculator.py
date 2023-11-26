@@ -4,6 +4,7 @@ import math
 import matplotlib.pyplot as plt
 def checking():
     log = input("Enter a logarithmic equation: ")
+    log = log.replace(' ','')
     placement = log.find('log')
     count = 0
     if log[0] != 'l':
@@ -37,34 +38,34 @@ def checking():
             try:
                 int(parenthesis[placement2:])
             except ValueError:
-                print("make sure x is the only variable being used.")
+                print("make sure x is the only variable being used. ")
                 checking()
         elif log[one] != 'x':
             try: # within the parenthesis 
                 int(parenthesis[:placement])
                 int(parenthesis[placement2:])
             except ValueError:
-                print("Make sure x is the only variable being used.")
+                print("Make sure x is the only variable being used. ")
                 checking()
     elif '-' not in parenthesis and '+' not in parenthesis:
         if log[one] == 'x':
             pass
         elif log[one] != 'x':
             int(parenthesis[:placement])
-        
+    print(parenthesis)
     two = two + 1
     placement = int(log.find('+', two)) + 1
-    if '+' not in log and '-' not in log:
+    placeholder = log.find(')')
+    vertical  = log[placeholder:]
+    if '+' not in vertical and '-' not in vertical:
         pass
-    elif '+' in log or '-' in log:
-        print(placement, 'smth')
-        print("vert")
+    elif '+' in vertical or '-' in vertical:
         try: # vertical shift
-            print( log[placement:])
             int(log[placement:])
         except ValueError:
             print("Make sure x is the only variable being used.")
             checking()
+      
     if '+' not in parenthesis and '-' not in parenthesis and log[one] == 'x':
         return parenthesis, None, None, log
     elif '+' not in parenthesis and '-' not in parenthesis and log[one] != 'x':
@@ -404,13 +405,13 @@ def graphing():
         partial += ')'
         log = log.replace(')', partial)
         if log[0] != 'l':
-            log = log.replace('log', ' * math.log')
+            log = log.replace('log', '*math.log')
         elif log[0] == 'l':
             log = log.replace('log', 'math.log')
         if parenthesis[0] == 'x':
-            log = log.replace('x', 'i ')
+            log = log.replace('x', 'i')
         elif parenthesis[0] != 'x':
-            log = log.replace('x', ' * i ')
+            log = log.replace('x', '*i')
         for i in xaxis:
             try:
                 yaxis += [eval(log)]

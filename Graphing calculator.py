@@ -6,11 +6,13 @@ def checking(in1):
     if in1 == 'log':
         log = input("Enter a logarithmic equation: ")
         log = log.replace(' ','')
+        while (log == ''):
+            print("Don't leave the prompt empty.")
+            log = input("Enter a logarithmic equation: ")
+            log = log.replace(' ','')
         placement = log.find('log')
         count = 0
-        if log == '':
-            print("Don't leave the prompt empty.")
-            checking('log')
+        print(log)
         if log[0] != 'l':
             try: # what the log is being multiplied by
                 int(log[:placement])

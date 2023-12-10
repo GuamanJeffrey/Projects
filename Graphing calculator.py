@@ -2,79 +2,92 @@ import re
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-def checking():
-    log = input("Enter a logarithmic equation: ")
-    log = log.replace(' ','')
-    placement = log.find('log')
-    count = 0
-    if log[0] != 'l':
-        try: # what the log is being multiplied by
-            int(log[:placement])
-        except ValueError:
-            print("Make sure no other variables than x are being used")
-            checking()
-    one = int(log.find('(')) + 1
-    two = int(log.find(')'))
-    parenthesis = log[one:two]
-    placement = int(parenthesis.find('x'))
-    if '+' in parenthesis:
-        placement2 = parenthesis.find('+')
-        if log[one] == 'x':
-            try:
-                int(parenthesis[placement2:])
+def checking(in1):
+    if in1 == 'log':
+        log = input("Enter a logarithmic equation: ")
+        log = log.replace(' ','')
+        placement = log.find('log')
+        count = 0
+        if log == '':
+            print("Don't leave the prompt empty.")
+            checking('log')
+        if log[0] != 'l':
+            try: # what the log is being multiplied by
+                int(log[:placement])
             except ValueError:
-                print("make sure x is the only variable being used.")
-                checking()
-        elif log[one] != 'x':
-            try: # within the parenthesis 
+                print("Make sure no other variables than x are being used")
+                checking('log')
+        one = int(log.find('(')) + 1
+        two = int(log.find(')'))
+        parenthesis = log[one:two]
+        placement = int(parenthesis.find('x'))
+        if '+' in parenthesis[placement:two]:
+            placement2 = parenthesis.find('+')
+            if parenthesis[placement - 1] == 'x':
+                try:
+                    int(parenthesis[placement2:])
+                except ValueError:
+                    print("make sure x is the only variable being used. 1")
+                    checking('log')
+            elif parenthesis[placement - 1] != 'x':
+                try: # within the parenthesis 
+                    int(parenthesis[:placement])
+                    print(parenthesis[:placement])
+                    int(parenthesis[placement2:])
+                except ValueError:
+                    print("Make sure x is the only variable being used. 2")
+                    checking('log')
+        elif '-' in parenthesis[placement:two]:
+            placement2 = parenthesis.find('-')
+            if log[one] == 'x':
+                try:
+                    int(parenthesis[placement2:])
+                except ValueError:
+                    print("make sure x is the only variable being used. 3")
+                    checking('log')
+            elif log[one] != 'x':
+                try: # within the parenthesis 
+                    int(parenthesis[:placement])
+                    int(parenthesis[placement2:])
+                except ValueError:
+                    print("Make sure x is the only variable being used.4 ")
+                    checking('log')
+        elif '-' not in parenthesis[placement:] and '+' not in parenthesis[placement:]:
+            if log[one] == 'x':
+                pass
+            elif log[one] != 'x':
                 int(parenthesis[:placement])
-                int(parenthesis[placement2:])
-            except ValueError:
-                print("Make sure x is the only variable being used.")
-                checking()
-    elif '-' in parenthesis:
-        placement2 = parenthesis.find('-')
-        if log[one] == 'x':
-            try:
-                int(parenthesis[placement2:])
-            except ValueError:
-                print("make sure x is the only variable being used. ")
-                checking()
-        elif log[one] != 'x':
-            try: # within the parenthesis 
-                int(parenthesis[:placement])
-                int(parenthesis[placement2:])
-            except ValueError:
-                print("Make sure x is the only variable being used. ")
-                checking()
-    elif '-' not in parenthesis and '+' not in parenthesis:
-        if log[one] == 'x':
+        two = two + 1
+        placement3 = int(log.find('+', two )) + 1
+        placeholder = log.find(')')
+        vertical  = log[placeholder:]
+        print(vertical)
+        if '+' not in vertical and '-' not in vertical:
             pass
-        elif log[one] != 'x':
-            int(parenthesis[:placement])
-    print(parenthesis)
-    two = two + 1
-    placement = int(log.find('+', two)) + 1
-    placeholder = log.find(')')
-    vertical  = log[placeholder:]
-    if '+' not in vertical and '-' not in vertical:
-        pass
-    elif '+' in vertical or '-' in vertical:
-        try: # vertical shift
-            int(log[placement:])
-        except ValueError:
-            print("Make sure x is the only variable being used.")
-            checking()
-      
-    if '+' not in parenthesis and '-' not in parenthesis and log[one] == 'x':
-        return parenthesis, None, None, log
-    elif '+' not in parenthesis and '-' not in parenthesis and log[one] != 'x':
-        return( parenthesis, placement, None, log)
-    elif '-' in parenthesis or '+' in parenthesis and log[one] == 'x':
-        return( parenthesis, placement2, None, log)
-    elif '-' in parenthesis or '+' in parenthesis and log[one] != 'x':
-        return (parenthesis, placement, placement2, log)
-    
+        elif '+' in vertical or '-' in vertical:
+            if '+' in vertical:
+                placeholder = vertical.find('+')
+                try: # vertical shift
+                    int(vertical[placeholder:])
+                except ValueError:
+                    print("Make sure x is the only variable being used.")
+                    checking('log')
+            elif '-' in vertical:
+                placeholder = vertical.find('-')
+                try:
+                    int(vertical[placeholder:])
+                except ValueError:
+                    print("Make sure x is the only variable being used.")
+                    checking('log')
+          
+        if ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]) and log[one] == 'x':
+            return parenthesis, None, None, log
+        elif ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]) and log[one] != 'x':
+            return( parenthesis, placement3, None, log)
+        elif ('-' in parenthesis[placement:] or '+' in parenthesis[placement:]) and log[one] == 'x':
+            return( parenthesis, placement2, None, log)
+        elif ('-' in parenthesis[placement:] or '+' in parenthesis[placement:]) and log[one] != 'x':
+            return (parenthesis, placement3, placement2, log)
                         
 def settings(in1):
     decision = in1
@@ -375,24 +388,24 @@ def graphing():
                 except ValueError:
                     print("Only enter numbers.")
                     pass
-            parenthesis,placement,placement2,log = checking()
+            parenthesis,placement,placement2,log = checking('log')
         one = log.find('(') + 1
         two = log.find(')')
         placement = int(parenthesis.find('x'))
         placement2 = parenthesis.find('+')
         if log[one] == 'x' and ('+' in parenthesis or '-' in parenthesis):
-            if '-' in parenthesis:
+            if '-' in parenthesis[placement:]:
                 xintercept = 1 + float(parenthesis[placement2:])
-            elif '+' in parenthesis:
+            elif '+' in parenthesis[placement:]:
                 xintercept = 1 - float(parenthesis[placement2:])
-        elif log[one] == 'x' and ('+' not in parenthesis and '-' not in parenthesis):
+        elif log[one] == 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]):
             xintercept = 1
-        elif log[one] != 'x' and ('+'in parenthesis or '-' in parenthesis):
-            if '+' in parenthesis:
+        elif log[one] != 'x' and ('+'in parenthesis[placement:] or '-' in parenthesis[placement:]):
+            if '+' in parenthesis[placement:]:
                 xintercept = ( 1 - float(parenthesis[placement2:])) / float(parenthesis[:placement])
-            if '-' in parenthesis:
+            if '-' in parenthesis[placement:]:
                 xintercept = ( 1 + float(parenthesis[placement2:])) / float(parenthesis[:placement])
-        elif log [one] != 'x' and ('+' not in parenthesis and '-' not in parenthesis):
+        elif log [one] != 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]):
             xintercept  = 1 / float(parenthesis[:placement])
                  
         xaxis = []

@@ -398,40 +398,55 @@ def graphing():
         placement4 = log.find('-', two)
         placement5 = parenthesis.find('-')
         if log[one] == 'x' and ('+' in parenthesis or '-' in parenthesis):
-            if '-' in parenthesis[placement:] and ('+' and '-') not in log[two:]:
+            if '-' in parenthesis[placement:] and ('+'  not in log[two:] and '-' not in log[two]) and log[0] == 'l':
                 xintercept = 1 + float(parenthesis[placement5:])
-            elif '+' in parenthesis[placement:] and ('+' and '-') not in log[two:]:
+                #print(".1")
+            elif '+' in parenthesis[placement:] and ('+'  not in log[two:] and '-' not in log[two]) and log[0] == 'l':
                 xintercept = 1 - float(parenthesis[placement2:])
-            elif '-' in parenthesis[placement:] and '+' in log[two:]:
-                xintercept = (base ** (-1 * int(log[placement3:]))) + float(parenthesis[placement5:])
-            elif '+' in parenthesis[placement:] and '-' in log[two:]:
-                xintercept = (base ** int(log[placement4:])) - float(parenthesis[placement2:])
-            elif '-' in parenthesis[placement:] and '-' in log[two:]:
-                xintercept = (base ** int(log[placement4:])) + float(parenthesis[placement5:])
-            elif '+' in parenthesis[placement:] and '+' in log[two:]:
-                xintercept = (base ** (-1 * int(log[placement3:]))) - float(parenthesis[placement2:])
-        elif log[one] == 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]) and (('+' and '-') not in log[two:]):
+                #print(".2")
+            elif '-' in parenthesis[placement:] and '+' in log[two:] and log[0] == 'l':
+                xintercept = (base ** (-1 * float(log[placement3:]))) + float(parenthesis[placement5:])
+                #print(".3")
+            elif '+' in parenthesis[placement:] and '-' in log[two:] and log[0] == 'l':
+                xintercept = (base ** float(log[placement4:])) - float(parenthesis[placement2:])
+                #print(".4")
+            elif '-' in parenthesis[placement:] and '-' in log[two:] and log[0] == 'l':
+                xintercept = (base ** float(log[placement4:])) + float(parenthesis[placement5:])
+                #print(".5")
+            elif '+' in parenthesis[placement:] and '+' in log[two:] and log[0] == 'l':
+                xintercept = (base ** (-1 * float(log[placement3:]))) - float(parenthesis[placement2:])
+                #print(".6")
+        elif parenthesis[0] == 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]) and ('+'  not in log[two:] and '-' not in log[two]):
             xintercept = 1
-        elif log[one] != 'x' and ('+'in parenthesis[placement:] or '-' in parenthesis[placement:]):
-            if '+' in parenthesis[placement:] and ('+' and '-') not in log[two:]:
+        elif parenthesis[0] != 'x' and ('+'in parenthesis[placement:] or '-' in parenthesis[placement:]):
+            if '+' in parenthesis[placement:] and ('+'  not in log[two:] and '-' not in log[two]):
                 xintercept = ( 1 - float(parenthesis[placement2:])) / float(parenthesis[:placement])
-            elif '-' in parenthesis[placement:]  and ('+' and '-') not in log[two:]:
+                #print("1.1")
+            elif '-' in parenthesis[placement:]  and ('+'  not in log[two:] and '-' not in log[two]):
                 xintercept = ( 1 + float(parenthesis[placement2:])) / float(parenthesis[:placement])
+                #print("1.2")
             elif '-' in parenthesis[placement:] and '+' in log[two:]:
                 xintercept = ((base ** (-1 * int(log[placement3:]))) + float(parenthesis[placement5:])) / float(parenthesis[:placement])
+                #print("1.3")
             elif '+' in parenthesis[placement:] and '-' in log[two:]:
-                xintercept = ((base ** int(log[placement4:])) - float(parenthesis[placement2:])) / float(parenthesis[:placement])
+                xintercept = ((base ** float(log[placement4:])) - float(parenthesis[placement2:])) / float(parenthesis[:placement])
+                #print('1.4')
             elif '-' in parenthesis[placement:] and '-' in log[two:]:
-                xintercept = ((base ** int(log[placement4:])) + float(parenthesis[placement5:])) / float(parenthesis[:placement])
+                xintercept = ((base ** float(log[placement4:])) + float(parenthesis[placement5:])) / float(parenthesis[:placement])
+                #print("1.5")
             elif '+' in parenthesis[placement:] and '+' in log[two:]:
-                xintercept = ((base ** (-1 * int(log[placement3:]))) - float(parenthesis[placement2:])) / float(parenthesis[:placement])
+                xintercept = ((base ** (-1 * float(log[placement3:]))) - float(parenthesis[placement2:])) / float(parenthesis[:placement])
+                #print("1.6")
         elif log [one] != 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]):
-            if ('+' and '-') not in log[two:]:
+            if ('+'  not in log[two:] and '-' not in log[two]):
                 xintercept  = 1 / float(parenthesis[:placement])
+                #print("2.1")
             elif '+' in log[two:]:
-                xintercept = (base ** (-1 * int(log[placement3:]))) / float(parenthesis[:placement])
+                xintercept = (base ** (-1 * float(log[placement3:]))) / float(parenthesis[:placement])
+                #print("2.2")
             elif '-' in log[two:]:
-                xintercept = (base ** int(log[placement3:])) / float(parenthesis[:placement])
+                xintercept = (base ** float(log[placement3:])) / float(parenthesis[:placement])
+                #print("2.3")
                  
         xaxis = []
         yaxis = []

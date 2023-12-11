@@ -25,16 +25,15 @@ def checking(in1):
         placement = int(parenthesis.find('x'))
         if '+' in parenthesis[placement:two]:
             placement2 = parenthesis.find('+')
-            if parenthesis[placement - 1] == 'x':
+            if parenthesis[0] == 'x':
                 try:
                     int(parenthesis[placement2:])
                 except ValueError:
                     print("make sure x is the only variable being used. 1")
                     checking('log')
-            elif parenthesis[placement - 1] != 'x':
+            elif parenthesis[0] != 'x':
                 try: # within the parenthesis 
                     int(parenthesis[:placement])
-                    print(parenthesis[:placement])
                     int(parenthesis[placement2:])
                 except ValueError:
                     print("Make sure x is the only variable being used. 2")
@@ -395,20 +394,44 @@ def graphing():
         two = log.find(')')
         placement = int(parenthesis.find('x'))
         placement2 = parenthesis.find('+')
+        placement3 = log.find('+', two)
+        placement4 = log.find('-', two)
+        placement5 = parenthesis.find('-')
         if log[one] == 'x' and ('+' in parenthesis or '-' in parenthesis):
-            if '-' in parenthesis[placement:]:
-                xintercept = 1 + float(parenthesis[placement2:])
-            elif '+' in parenthesis[placement:]:
+            if '-' in parenthesis[placement:] and ('+' and '-') not in log[two:]:
+                xintercept = 1 + float(parenthesis[placement5:])
+            elif '+' in parenthesis[placement:] and ('+' and '-') not in log[two:]:
                 xintercept = 1 - float(parenthesis[placement2:])
-        elif log[one] == 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]):
+            elif '-' in parenthesis[placement:] and '+' in log[two:]:
+                xintercept = (base ** (-1 * int(log[placement3:]))) + float(parenthesis[placement5:])
+            elif '+' in parenthesis[placement:] and '-' in log[two:]:
+                xintercept = (base ** int(log[placement4:])) - float(parenthesis[placement2:])
+            elif '-' in parenthesis[placement:] and '-' in log[two:]:
+                xintercept = (base ** int(log[placement4:])) + float(parenthesis[placement5:])
+            elif '+' in parenthesis[placement:] and '+' in log[two:]:
+                xintercept = (base ** (-1 * int(log[placement3:]))) - float(parenthesis[placement2:])
+        elif log[one] == 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]) and (('+' and '-') not in log[two:]):
             xintercept = 1
         elif log[one] != 'x' and ('+'in parenthesis[placement:] or '-' in parenthesis[placement:]):
-            if '+' in parenthesis[placement:]:
+            if '+' in parenthesis[placement:] and ('+' and '-') not in log[two:]:
                 xintercept = ( 1 - float(parenthesis[placement2:])) / float(parenthesis[:placement])
-            if '-' in parenthesis[placement:]:
+            elif '-' in parenthesis[placement:]  and ('+' and '-') not in log[two:]:
                 xintercept = ( 1 + float(parenthesis[placement2:])) / float(parenthesis[:placement])
+            elif '-' in parenthesis[placement:] and '+' in log[two:]:
+                xintercept = ((base ** (-1 * int(log[placement3:]))) + float(parenthesis[placement5:])) / float(parenthesis[:placement])
+            elif '+' in parenthesis[placement:] and '-' in log[two:]:
+                xintercept = ((base ** int(log[placement4:])) - float(parenthesis[placement2:])) / float(parenthesis[:placement])
+            elif '-' in parenthesis[placement:] and '-' in log[two:]:
+                xintercept = ((base ** int(log[placement4:])) + float(parenthesis[placement5:])) / float(parenthesis[:placement])
+            elif '+' in parenthesis[placement:] and '+' in log[two:]:
+                xintercept = ((base ** (-1 * int(log[placement3:]))) - float(parenthesis[placement2:])) / float(parenthesis[:placement])
         elif log [one] != 'x' and ('+' not in parenthesis[placement:] and '-' not in parenthesis[placement:]):
-            xintercept  = 1 / float(parenthesis[:placement])
+            if ('+' and '-') not in log[two:]:
+                xintercept  = 1 / float(parenthesis[:placement])
+            elif '+' in log[two:]:
+                xintercept = (base ** (-1 * int(log[placement3:]))) / float(parenthesis[:placement])
+            elif '-' in log[two:]:
+                xintercept = (base ** int(log[placement3:])) / float(parenthesis[:placement])
                  
         xaxis = []
         yaxis = []
